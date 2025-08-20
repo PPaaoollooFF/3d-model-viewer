@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>STL Viewer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>3D Model Viewer</title>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
@@ -16,9 +16,9 @@
     import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/STLLoader.js';
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xeeeeee);
+    scene.background = new THREE.Color(0xf0f0f0);
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(3, 3, 3);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -28,15 +28,20 @@
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-    const light1 = new THREE.DirectionalLight(0xffffff, 1);
-    light1.position.set(1, 1, 1).normalize();
-    scene.add(light1);
+    const ambientLight = new THREE.AmbientLight(0x888888);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
 
     const loader = new STLLoader();
     loader.load('Main.stl', function (geometry) {
       const material = new THREE.MeshStandardMaterial({ color: 0x0055ff });
       const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
+    }, undefined, function (error) {
+      console.error('An error happened while loading the STL file:', error);
     });
 
     function animate() {
@@ -55,5 +60,3 @@
   </script>
 </body>
 </html>
-
-

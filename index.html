@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>3D Model Viewer</title>
+  <title>3D STL Viewer</title>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
   </style>
+
+  <!-- ✅ Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <!-- ✅ OrbitControls -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- ✅ STLLoader -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/STLLoader.js"></script>
 </head>
 <body>
-  <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
-    import { STLLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/STLLoader.js';
-
+  <script>
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f0f0);
 
@@ -25,7 +28,7 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
     const ambientLight = new THREE.AmbientLight(0x888888);
@@ -35,13 +38,13 @@
     directionalLight.position.set(1, 1, 1);
     scene.add(directionalLight);
 
-    const loader = new STLLoader();
+    const loader = new THREE.STLLoader();
     loader.load('Main.stl', function (geometry) {
       const material = new THREE.MeshStandardMaterial({ color: 0x0055ff });
       const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
     }, undefined, function (error) {
-      console.error('An error happened while loading the STL file:', error);
+      console.error('Error loading STL:', error);
     });
 
     function animate() {
